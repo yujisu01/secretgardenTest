@@ -1,0 +1,124 @@
+CREATE TABLE tbl_book
+(
+    BOOKNO          NUMBER(5,0)           NOT NULL, 
+    BOOKROOM        VARCHAR2(200 BYTE)    NULL, 
+    BOOKHOUR        VARCHAR2(30 BYTE)     NULL, 
+    BOOKDURATION    VARCHAR2(30 BYTE)     NULL, 
+    BOOKPEOPLE      NUMBER                NULL, 
+    BOOKED          CHAR(20 BYTE)         DEFAULT 'y' NULL, 
+    RDATE           DATE                  NULL, 
+    CONSTRAINT PK_tbl_book PRIMARY KEY (BOOKNO)
+);
+
+COMMENT ON TABLE tbl_book IS '예약정보'
+COMMENT ON COLUMN tbl_book.BOOKNO IS '방번호'
+COMMENT ON COLUMN tbl_book.BOOKROOM IS '방이름'
+COMMENT ON COLUMN tbl_book.BOOKHOUR IS '시작시간'
+COMMENT ON COLUMN tbl_book.BOOKDURATION IS '소요시간'
+COMMENT ON COLUMN tbl_book.BOOKPEOPLE IS '인원수'
+COMMENT ON COLUMN tbl_book.BOOKED IS '예약가능'
+COMMENT ON COLUMN tbl_book.RDATE IS '예약날짜';
+
+
+
+
+
+
+
+CREATE TABLE tbl_attach
+(
+    UUID          VARCHAR2(100 BYTE)    NOT NULL, 
+    UPLOADPATH    VARCHAR2(200 BYTE)    NULL, 
+    FILENAME      VARCHAR2(100 BYTE)    NULL, 
+    FILETYPE      CHAR(1 BYTE)          DEFAULT 'I' NULL, 
+    BNO           NUMBER                NULL, 
+    CONSTRAINT "TBL_ATTACH_UUID_PK" PRIMARY KEY (UUID)
+);
+
+ALTER TABLE tbl_attach
+    ADD CONSTRAINT FK_tbl_attach_BNO_tbl_board_BN FOREIGN KEY (BNO)
+        REFERENCES tbl_board (BNO);
+        
+        
+        
+        
+        
+
+
+CREATE TABLE tbl_bookmember
+(
+    NAMEFIELD     VARCHAR2(60 BYTE)     NULL, 
+    PHONEFIELD    VARCHAR2(50 BYTE)     NULL, 
+    EMAILFIELD    VARCHAR2(200 BYTE)    NULL, 
+    PWFIELD       VARCHAR2(50 BYTE)     NULL, 
+    BOOKNO        NUMBER                NULL, 
+    RDATE         DATE                  NULL   
+);
+
+COMMENT ON COLUMN tbl_bookmember.NAMEFIELD IS '예약자명'
+COMMENT ON COLUMN tbl_bookmember.PHONEFIELD IS '전화번호'
+COMMENT ON COLUMN tbl_bookmember.EMAILFIELD IS '이메일'
+COMMENT ON COLUMN tbl_bookmember.PWFIELD IS '비밀번호'
+COMMENT ON COLUMN tbl_bookmember.BOOKNO IS '방번호'
+COMMENT ON COLUMN tbl_bookmember.RDATE IS '예약날짜';
+
+
+ALTER TABLE tbl_bookmember
+    ADD CONSTRAINT FK_tbl_bookmember_BOOKNO_tbl_b FOREIGN KEY (BOOKNO)
+        REFERENCES tbl_book (BOOKNO);
+        
+        
+        
+        
+        
+        
+CREATE TABLE tbl_board
+(
+    BNO         NUMBER(10,0)           NOT NULL, 
+    TITLE       VARCHAR2(300 BYTE)     NULL, 
+    CONTENT     VARCHAR2(3000 BYTE)    NULL, 
+    WRITER      VARCHAR2(60 BYTE)      NULL, 
+    REGDATE     DATE                   DEFAULT sysdate NULL, 
+    VIEWCNT     NUMBER                 DEFAULT 0 NULL, 
+    REPLYCNT    NUMBER                 DEFAULT 0 NULL, 
+    CONSTRAINT "TBL_BOARD_BNO_PK" PRIMARY KEY (BNO)
+);
+
+
+
+
+
+
+
+CREATE TABLE tbl_member
+(
+    USERID        VARCHAR2(60 BYTE)     NOT NULL, 
+    USERPW        VARCHAR2(60 BYTE)     NULL, 
+    USERNAME      VARCHAR2(60 BYTE)     NULL, 
+    EMAIL         VARCHAR2(300 BYTE)    NULL, 
+    REGDATE       TIMESTAMP             DEFAULT SYSDATE NULL, 
+    UPDATEDATE    TIMESTAMP             DEFAULT sysdate NULL, 
+    CONSTRAINT PK_tbl_member PRIMARY KEY (USERID)
+);
+
+
+
+
+
+
+
+CREATE TABLE tbl_reply
+(
+    RNO           NUMBER                 NOT NULL, 
+    BNO           NUMBER                 NULL, 
+    REPLYTEXT     VARCHAR2(1000 BYTE)    NULL, 
+    REPLYER       VARCHAR2(50 BYTE)      NULL, 
+    REGDATE       DATE                   DEFAULT sysdate NULL, 
+    UPDATEDATE    DATE                   DEFAULT sysdate NULL, 
+    CONSTRAINT "TBL_REPLY_RNO_PK" PRIMARY KEY (RNO)
+)
+;
+
+ALTER TABLE tbl_reply
+    ADD CONSTRAINT FK_tbl_reply_BNO_tbl_board_BNO FOREIGN KEY (BNO)
+        REFERENCES tbl_board (BNO);  
